@@ -1,0 +1,35 @@
+name: Build and deploy to azure
+
+on:
+  push:
+    branches:
+      - main  # You can change this to the branch you want to trigger the action from
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build the project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish the project as a zip
+        run: dotnet publish --configuration Release --output ./publish_output --no-build
+
+      - name: Deploy to Azure Function App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'your-azure-function-app-name'  # Replace with your Function App name
+          publish-profile: ${{ secrets.Azure_Publish_profile }}
+          package: ./publish_output

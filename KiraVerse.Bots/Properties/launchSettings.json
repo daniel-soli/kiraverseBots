@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "KiraVerse.Bots": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7283",
+      "launchBrowser": false
+    }
+  }
+}
